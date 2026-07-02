@@ -1,13 +1,54 @@
 const DATA = window.OLESNICE_DATA;
 
-const COLORS = {
-  blue: "#2468a2",
-  red: "#c94d4d",
-  green: "#31755a",
-  amber: "#b96f24",
-  violet: "#7560a8",
-  gray: "#66757f"
+let COLORS = {
+  blue: "#62a8ff",
+  red: "#ff6f7b",
+  green: "#58d38c",
+  amber: "#f5b84b",
+  violet: "#b99cff",
+  gray: "#9aa9b5"
 };
+
+function refreshColors() {
+  const styles = getComputedStyle(document.body);
+  COLORS = {
+    blue: styles.getPropertyValue("--blue").trim(),
+    red: styles.getPropertyValue("--red").trim(),
+    green: styles.getPropertyValue("--green").trim(),
+    amber: styles.getPropertyValue("--amber").trim(),
+    violet: styles.getPropertyValue("--violet").trim(),
+    gray: styles.getPropertyValue("--muted").trim()
+  };
+}
+
+function formatGeneratedAt(value) {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString("cs-CZ", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function applyTheme(theme, rerender = false) {
+  document.body.dataset.theme = theme;
+  localStorage.setItem("olesniceTheme", theme);
+  document.querySelector("#themeToggleText").textContent = theme === "dark" ? "Světlý režim" : "Tmavý režim";
+  refreshColors();
+  if (rerender) render();
+}
+
+function initTheme() {
+  const saved = localStorage.getItem("olesniceTheme");
+  const theme = saved === "light" || saved === "dark" ? saved : "dark";
+  applyTheme(theme, false);
+  document.querySelector("#themeToggle").addEventListener("click", () => {
+    applyTheme(document.body.dataset.theme === "dark" ? "light" : "dark", true);
+  });
+}
 
 const state = {
   season: "all",
@@ -129,7 +170,10 @@ function initFilters() {
     render();
   });
 
-  document.querySelector("#lastUpdated").textContent = `Aktualizováno z ${raw.length} startů`;
+  const generatedAt = formatGeneratedAt(DATA.generatedAt);
+  document.querySelector("#lastUpdated").textContent = generatedAt
+    ? `Aktualizováno ${generatedAt}`
+    : "Aktualizováno";
 }
 
 function refreshDependentFilters() {
@@ -501,5 +545,6 @@ function render() {
   renderTables();
 }
 
+initTheme();
 initFilters();
 render();

@@ -3,17 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Olešnice X | Statistiky výkonů</title>
+  <title>Olešnice X - Statistiky</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="dark">
   <header class="topbar">
     <div>
-      <p class="eyebrow">SDH Olešnice X</p>
-      <h1>Statistiky výkonů 2009-2026</h1>
+      <h1>Olešnice X - Statistiky</h1>
     </div>
     <div class="topbar__meta">
       <span id="lastUpdated">Lokální prototyp</span>
+      <button id="themeToggle" class="themeToggle" type="button" aria-label="Přepnout světlý/tmavý režim">
+        <span id="themeToggleText">Světlý režim</span>
+      </button>
     </div>
   </header>
 
@@ -67,6 +69,32 @@
         <span>Vítězství</span>
         <strong id="kpiWins">-</strong>
         <small id="kpiPodiums">-</small>
+      </article>
+    </section>
+
+    <section class="tables">
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Top výsledky</h2>
+            <p>Nejrychlejší platné výsledné časy.</p>
+          </div>
+        </div>
+        <div class="tableWrap">
+          <table id="topResultsTable"></table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Top sestřiky</h2>
+            <p>Nejrychlejší L/P terče.</p>
+          </div>
+        </div>
+        <div class="tableWrap">
+          <table id="topHitsTable"></table>
+        </div>
       </article>
     </section>
 
@@ -128,31 +156,6 @@
       </article>
     </section>
 
-    <section class="tables">
-      <article class="panel">
-        <div class="panel__head">
-          <div>
-            <h2>Top výsledky</h2>
-            <p>Nejrychlejší platné výsledné časy.</p>
-          </div>
-        </div>
-        <div class="tableWrap">
-          <table id="topResultsTable"></table>
-        </div>
-      </article>
-
-      <article class="panel">
-        <div class="panel__head">
-          <div>
-            <h2>Top sestřiky</h2>
-            <p>Nejrychlejší L/P terče.</p>
-          </div>
-        </div>
-        <div class="tableWrap">
-          <table id="topHitsTable"></table>
-        </div>
-      </article>
-    </section>
   </main>
 
   <script src="data.js"></script>
