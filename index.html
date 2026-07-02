@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Olešnice X | Statistiky výkonů</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">SDH Olešnice X</p>
+      <h1>Statistiky výkonů 2009-2026</h1>
+    </div>
+    <div class="topbar__meta">
+      <span id="lastUpdated">Lokální prototyp</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="filters" aria-label="Filtry">
+      <label>
+        <span>Sezona</span>
+        <select id="seasonFilter"></select>
+      </label>
+      <label>
+        <span>Hadice</span>
+        <select id="hoseFilter">
+          <option value="all">2B + 3B</option>
+          <option value="2B">2B</option>
+          <option value="3B">3B</option>
+        </select>
+      </label>
+      <label>
+        <span>Liga</span>
+        <select id="leagueFilter"></select>
+      </label>
+      <label>
+        <span>Soutěž</span>
+        <select id="eventFilter"></select>
+      </label>
+      <button id="resetFilters" type="button">Vyčistit</button>
+    </section>
+
+    <section class="kpis" aria-label="Souhrn">
+      <article class="kpi">
+        <span>Startů</span>
+        <strong id="kpiStarts">-</strong>
+        <small id="kpiBreakdown">-</small>
+      </article>
+      <article class="kpi">
+        <span>Nejlepší výsledek</span>
+        <strong id="kpiBestResult">-</strong>
+        <small id="kpiBestResultDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span>Nejlepší sestřik</span>
+        <strong id="kpiBestHit">-</strong>
+        <small id="kpiBestHitDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span>Medián výsledku</span>
+        <strong id="kpiMedianResult">-</strong>
+        <small id="kpiAvgResult">-</small>
+      </article>
+      <article class="kpi">
+        <span>Vítězství</span>
+        <strong id="kpiWins">-</strong>
+        <small id="kpiPodiums">-</small>
+      </article>
+    </section>
+
+    <section class="grid grid--main">
+      <article class="panel panel--wide">
+        <div class="panel__head">
+          <div>
+            <h2>Výsledky a sestřiky v čase</h2>
+            <p>Při výběru jedné sezony je osa X pořadí soutěže v sezoně.</p>
+          </div>
+          <select id="trendMetric">
+            <option value="results">Výsledky: top / průměr / medián</option>
+            <option value="hits">Sestřiky: top / průměr / medián</option>
+          </select>
+        </div>
+        <div id="seasonTrend" class="chart chart--line"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Počet startů</h2>
+            <p>Rozdělení 2B / 3B v čase.</p>
+          </div>
+        </div>
+        <div id="startsChart" class="chart"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>L / P sestřiky</h2>
+            <p>Medián terčů podle sezony.</p>
+          </div>
+        </div>
+        <div id="targetsChart" class="chart"></div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Umístění</h2>
+            <p>Kolikrát padlo dané pořadí.</p>
+          </div>
+        </div>
+        <div id="placesChart" class="chart"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Nejčastější soutěže</h2>
+            <p>Celkové počty startů podle závodu.</p>
+          </div>
+        </div>
+        <div id="eventsChart" class="chart"></div>
+      </article>
+    </section>
+
+    <section class="tables">
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Top výsledky</h2>
+            <p>Nejrychlejší platné výsledné časy.</p>
+          </div>
+        </div>
+        <div class="tableWrap">
+          <table id="topResultsTable"></table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <div>
+            <h2>Top sestřiky</h2>
+            <p>Nejrychlejší L/P terče.</p>
+          </div>
+        </div>
+        <div class="tableWrap">
+          <table id="topHitsTable"></table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
