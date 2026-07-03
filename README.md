@@ -1,4 +1,4 @@
-# Olešnice X - aktualizace webu
+# Aktualizace webu
 
 Krátký návod, jak z nového Excelu vygenerovat aktuální dashboard a ručně ho nahrát na GitHub Pages.
 
