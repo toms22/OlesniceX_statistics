@@ -1,5 +1,7 @@
 # Aktualizace webu
 
+Web dostupný na: https://toms22.github.io/OlesniceX_statistics/
+
 Krátký návod, jak z nového Excelu vygenerovat aktuální dashboard a ručně ho nahrát na GitHub Pages.
 
 ## Co ve složce nechat
