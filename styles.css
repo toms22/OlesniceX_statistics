@@ -100,6 +100,20 @@ h2 {
   border-radius: 6px;
 }
 
+.dashboardLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--green);
+  color: #10161d;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 main {
   width: min(1480px, 100%);
   margin: 0 auto;
