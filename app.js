@@ -145,7 +145,7 @@ function fillSelect(select, values, allLabel, selected) {
 }
 
 function initFilters() {
-  const seasons = unique(raw.map(r => String(r.sezona))).sort(byNumber);
+  const seasons = unique(raw.map(r => String(r.sezona))).sort((a, b) => byNumber(b, a));
   fillSelect(els.season, seasons, "Všechny sezony", state.season);
   refreshDependentFilters();
 
