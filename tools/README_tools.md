@@ -120,25 +120,3 @@ Když je chceš mít na GitHubu jako zálohu, dej je mimo veřejný root, třeba
 ```text
 tools
 ```
-
-## Častá chyba
-
-Nespouštěj:
-
-```powershell
-python build_local_stats.py
-```
-
-Může to spadnout na chybějící knihovně `openpyxl`.
-
-Používej:
-
-```text
-update_local.bat
-```
-
-nebo:
-
-```powershell
-.\update_local.ps1
-```
