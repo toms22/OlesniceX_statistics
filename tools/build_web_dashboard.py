@@ -23,9 +23,11 @@ def write_text(path: Path, text: str) -> None:
 
 def main() -> None:
     OUT.mkdir(exist_ok=True)
+    now = datetime.now()
+    build_version = now.strftime("%Y%m%d%H%M%S")
 
     payload = {
-        "generatedAt": datetime.now().isoformat(timespec="minutes"),
+        "generatedAt": now.isoformat(timespec="minutes"),
         "dataExport": read_csv("data_export.csv"),
         "sezony": read_csv("statistiky_sezony.csv"),
         "celkem": read_csv("statistiky_celkem.csv"),
@@ -45,13 +47,13 @@ def main() -> None:
 
     write_text(
         OUT / "index.html",
-        """<!doctype html>
+        f"""<!doctype html>
 <html lang="cs">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Olešnice X - Statistiky</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v={build_version}">
 </head>
 <body data-theme="dark">
   <header class="topbar">
@@ -60,6 +62,9 @@ def main() -> None:
     </div>
     <div class="topbar__meta">
       <span id="lastUpdated">Lokální prototyp</span>
+      <a class="dashboardLink" href="firesport/">
+        Statistiky lig
+      </a>
       <button id="themeToggle" class="themeToggle" type="button" aria-label="Přepnout světlý/tmavý režim">
         <span id="themeToggleText">Světlý režim</span>
       </button>
@@ -205,8 +210,8 @@ def main() -> None:
 
   </main>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script src="data.js?v={build_version}"></script>
+  <script src="app.js?v={build_version}"></script>
 </body>
 </html>
 """,
@@ -314,6 +319,20 @@ h2 {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 6px;
+}
+
+.dashboardLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--green);
+  color: #10161d;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 main {
@@ -744,7 +763,7 @@ function fillSelect(select, values, allLabel, selected) {
 }
 
 function initFilters() {
-  const seasons = unique(raw.map(r => String(r.sezona))).sort(byNumber);
+  const seasons = unique(raw.map(r => String(r.sezona))).sort((a, b) => byNumber(b, a));
   fillSelect(els.season, seasons, "Všechny sezony", state.season);
   refreshDependentFilters();
 
