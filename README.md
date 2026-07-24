@@ -1,3 +1,5 @@
 # Aktualizace webu
 
-Web dostupný na: https://toms22.github.io/OlesniceX_statistics/
+Olešnice X statistiky: https://toms22.github.io/OlesniceX_statistics/
+
+Ligové statistiky: https://toms22.github.io/OlesniceX_statistics/firesport/
