@@ -504,7 +504,7 @@ function filteredTop(rows, sortKey) {
     const bSort = numericSort(b[sortKey]);
     if (aSort !== bSort) return aSort - bSort;
     return String(a.datum || "").localeCompare(String(b.datum || ""));
-  }).slice(0, 20);
+  }).slice(0, 30);
 }
 
 function renderTables() {
