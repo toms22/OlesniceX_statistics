@@ -94,24 +94,75 @@ h2 {
 }
 
 .themeToggle {
-  width: auto;
-  min-height: 34px;
-  padding: 0 12px;
-  border-radius: 6px;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  min-height: 38px;
+  padding: 0;
+  border-radius: 8px;
 }
 
-.dashboardLink {
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ve tmavém režimu slunce (přepne na světlý), ve světlém měsíc */
+.icon--moon, body[data-theme="light"] .icon--sun {
+  display: none;
+}
+
+body[data-theme="light"] .icon--moon {
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.nav {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-strong);
+}
+
+.nav__item {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--green);
-  color: #10161d;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 7px;
+  color: var(--muted);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
+}
+
+.nav__item:hover {
+  color: var(--ink);
+}
+
+.nav__item.is-active {
+  background: var(--green);
+  color: #10161d;
+}
+
+body[data-theme="light"] .nav__item.is-active {
+  color: #fff;
 }
 
 main {
@@ -370,11 +421,74 @@ th {
   }
 
   .topbar__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 12px;
   }
 
-  .filters, .kpis, .grid, .grid--main, .tables {
+  .topbar__meta #lastUpdated {
+    flex: 1;
+    order: 1;
+  }
+
+  .topbar__meta .themeToggle {
+    order: 2;
+  }
+
+  .topbar__meta .nav {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .nav__item {
+    flex: 1;
+    padding: 0 6px;
+    font-size: 13px;
+  }
+
+  .topbar h1 {
+    font-size: 24px;
+  }
+
+  .panel, .kpi {
+    min-width: 0;
+  }
+
+  main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .filters, .grid, .grid--main, .tables {
     grid-template-columns: 1fr;
+  }
+
+  .kpis {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .kpi {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .kpi:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .kpi strong {
+    font-size: 24px;
+  }
+
+  .kpi span {
+    font-size: 11px;
+  }
+
+  .kpi small {
+    font-size: 11px;
+    overflow-wrap: anywhere;
   }
 
   .panel__head {
@@ -387,6 +501,48 @@ th {
   }
 
   .chart, .chart--line {
-    min-height: 330px;
+    min-height: 0;
   }
+
+  .chart {
+    overflow-x: auto;
+  }
+
+  /* tabulky se na telefonu vejdou na šířku: menší písmo, užší buňky, text se zalamuje */
+  table {
+    font-size: 11px;
+  }
+
+  th, td {
+    padding: 6px 3px;
+  }
+
+  /* zalamují se jen textové sloupce (tým / soutěž), čísla zůstávají v jednom řádku */
+  td:nth-child(2), td:nth-child(3) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    font-size: 10px;
+  }
+
+  td:first-child {
+    white-space: nowrap;
+  }
+
+  .panel {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* jednotná velikost popisků grafů na telefonu (viewBox 420 / 520 se zmenšuje různě) */
+  .chart svg[viewBox^="0 0 420"] text {
+    font-size: 10px;
+  }
+
+  .chart svg[viewBox^="0 0 520"] text {
+    font-size: 12px;
+  }
+
 }

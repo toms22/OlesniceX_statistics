@@ -4,21 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Olešnice X - Statistiky</title>
-  <link rel="stylesheet" href="styles.css?v=20261005065101">
+  <link rel="stylesheet" href="styles.css?v=20261009154532">
 </head>
-<body data-theme="dark">
+<body data-theme="light">
   <header class="topbar">
     <div>
       <h1>Olešnice X - Statistiky</h1>
     </div>
     <div class="topbar__meta">
       <span id="lastUpdated">Lokální prototyp</span>
-      <a class="dashboardLink" href="firesport/">
-        Statistiky lig
-      </a>
-      <button id="themeToggle" class="themeToggle" type="button" aria-label="Přepnout světlý/tmavý režim">
-        <span id="themeToggleText">Světlý režim</span>
-      </button>
+      <nav class="nav" aria-label="Stránky"><a class="nav__item is-active" aria-current="page" href="./">Olešnice X</a><a class="nav__item" href="treninky/?v=20261009154532">Tréninky 2026</a><a class="nav__item" href="firesport/?v=20261009154532">Ligy</a></nav>
+      <button id="themeToggle" class="themeToggle" type="button" title="Přepnout světlý / tmavý režim" aria-label="Přepnout světlý / tmavý režim"><svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span id="themeToggleText" class="sr-only">Světlý režim</span></button>
     </div>
   </header>
 
@@ -72,6 +68,34 @@
         <span>Vítězství</span>
         <strong id="kpiWins">-</strong>
         <small id="kpiPodiums">-</small>
+      </article>
+    </section>
+
+    <section class="kpis" aria-label="Limity a úspěšnost">
+      <article class="kpi">
+        <span id="kpiResLowLabel">Výsledky pod 16 s</span>
+        <strong id="kpiResLow">-</strong>
+        <small id="kpiResLowDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span id="kpiHitLowLabel">Sestřiky pod 16 s</span>
+        <strong id="kpiHitLow">-</strong>
+        <small id="kpiHitLowDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span id="kpiResHighLabel">Výsledky pod 17 s</span>
+        <strong id="kpiResHigh">-</strong>
+        <small id="kpiResHighDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span id="kpiHitHighLabel">Sestřiky pod 17 s</span>
+        <strong id="kpiHitHigh">-</strong>
+        <small id="kpiHitHighDetail">-</small>
+      </article>
+      <article class="kpi">
+        <span>Úspěšnost pokusů</span>
+        <strong id="kpiSuccess">-</strong>
+        <small id="kpiSuccessDetail">-</small>
       </article>
     </section>
 
@@ -161,7 +185,7 @@
 
   </main>
 
-  <script src="data.js?v=20261005065101"></script>
-  <script src="app.js?v=20261005065101"></script>
+  <script src="data.js?v=20261009154532"></script>
+  <script src="app.js?v=20261009154532"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+const isNarrow = () => window.innerWidth < 720;
+const narrowW = full => isNarrow() ? 520 : full;
 const DATA = window.OLESNICE_DATA;
 
 let COLORS = {
@@ -35,15 +37,15 @@ function formatGeneratedAt(value) {
 
 function applyTheme(theme, rerender = false) {
   document.body.dataset.theme = theme;
-  localStorage.setItem("olesniceTheme", theme);
+  localStorage.setItem("statistikyTheme", theme);
   document.querySelector("#themeToggleText").textContent = theme === "dark" ? "Světlý režim" : "Tmavý režim";
   refreshColors();
   if (rerender) render();
 }
 
 function initTheme() {
-  const saved = localStorage.getItem("olesniceTheme");
-  const theme = saved === "light" || saved === "dark" ? saved : "dark";
+  const saved = localStorage.getItem("statistikyTheme");
+  const theme = saved === "light" || saved === "dark" ? saved : "light";
   applyTheme(theme, false);
   document.querySelector("#themeToggle").addEventListener("click", () => {
     applyTheme(document.body.dataset.theme === "dark" ? "light" : "dark", true);
@@ -219,6 +221,29 @@ function renderKpis(rows) {
   setText("kpiAvgResult", `Průměr ${fmt(average(validResults.map(r => r.vysledny_cas)))}`);
   setText("kpiWins", String(wins));
   setText("kpiPodiums", `${podiums}x bedna`);
+  renderLimitKpis(rows, validResults);
+}
+
+// Limity: 3B pod 16 / 17 s, 2B pod 14 / 15 s.
+const LIMITS = { "3B": [16, 17], "2B": [14, 15] };
+
+function renderLimitKpis(rows, validResults) {
+  const limited = rows.filter(r => LIMITS[r.hadice]);
+  const kinds = unique(limited.map(r => r.hadice));
+  const labelLimit = i => kinds.length === 1 ? String(LIMITS[kinds[0]][i]) : `${LIMITS["2B"][i]} / ${LIMITS["3B"][i]}`;
+  const countResults = i => limited.filter(r => Number.isFinite(r.vysledny_cas) && r.vysledny_cas < LIMITS[r.hadice][i]).length;
+  const countHits = i => limited.reduce((sum, r) =>
+    sum + (Number.isFinite(r.L) && r.L < LIMITS[r.hadice][i] ? 1 : 0) + (Number.isFinite(r.P) && r.P < LIMITS[r.hadice][i] ? 1 : 0), 0);
+  const validLimited = limited.filter(r => Number.isFinite(r.vysledny_cas)).length;
+  [["kpiResLow", 0, "Výsledky", countResults], ["kpiHitLow", 0, "Sestřiky", countHits],
+   ["kpiResHigh", 1, "Výsledky", countResults], ["kpiHitHigh", 1, "Sestřiky", countHits]].forEach(([id, i, name, count]) => {
+    setText(`${id}Label`, `${name} pod ${labelLimit(i)} s`);
+    setText(id, String(count(i)));
+    setText(`${id}Detail`, name === "Výsledky" ? `${count(i)} z ${validLimited} platných pokusů` : "Počítá se levý i pravý terč");
+  });
+  const rate = rows.length ? validResults.length / rows.length * 100 : 0;
+  setText("kpiSuccess", `${rate.toLocaleString("cs-CZ", { maximumFractionDigits: 1 })} %`);
+  setText("kpiSuccessDetail", `${validResults.length} z ${rows.length} startů s platným výsledkem`);
 }
 
 function svgWrap(width, height, inner) {
@@ -332,7 +357,7 @@ function lineChart(el, rows, metricMode) {
   })).filter(item => item.points.length > 0);
   if (!active.length || points.length < 2) return emptyChart(el);
 
-  const w = 900, h = 520, left = 60, right = 24, top = 28, bottom = 82;
+  const w = narrowW(900), h = isNarrow() ? 360 : 520, left = 60, right = 24, top = 28, bottom = 82;
   const allVals = active.flatMap(item => item.points.map(point => point[item.key]));
   const minY = Math.floor((Math.min(...allVals) - .8) * 10) / 10;
   const maxY = Math.ceil((Math.max(...allVals) + .8) * 10) / 10;
@@ -362,9 +387,9 @@ function lineChart(el, rows, metricMode) {
         : metricMode === "hits"
         ? `Top: ${fmt(point.nejlepsi_sestrik)}<br>Průměr: ${fmt(point.prumer_sestriku)}<br>Medián: ${fmt(point.median_sestriku)}`
         : `Top: ${fmt(point.nejlepsi_cas)}<br>Průměr: ${fmt(point.prumer_vysledku)}<br>Medián: ${fmt(point.median_vysledku)}`;
-      return `<circle cx="${x(point)}" cy="${yFor(point, item.key)}" r="4" fill="${item.color}" data-tip="<strong>${escapeHtml(point.tipTitle)}</strong><br>${extras}<br>Startů: ${point.starts}"></circle>`;
+      return `<circle cx="${x(point)}" cy="${yFor(point, item.key)}" r="${isNarrow() ? 2 : 4}" fill="${item.color}" data-tip="<strong>${escapeHtml(point.tipTitle)}</strong><br>${extras}<br>Startů: ${point.starts}"></circle>`;
     }).join("");
-    return `<path d="${d}" fill="none" stroke="${item.color}" stroke-width="3"/>${dots}`;
+    return `<path d="${d}" fill="none" stroke="${item.color}" stroke-width="${isNarrow() ? 1.6 : 3}"/>${dots}`;
   }).join("");
   const legend = `<div class="legend">${active.map(item => `<span><i style="background:${item.color}"></i>${item.label}</span>`).join("")}</div>`;
   el.innerHTML = legend + svgWrap(w, h, `${grid}<line class="axis" x1="${left}" x2="${w - right}" y1="${h - bottom}" y2="${h - bottom}"/>${labels}${paths}`);
@@ -374,7 +399,7 @@ function lineChart(el, rows, metricMode) {
 function groupedBars(el, rows) {
   const points = aggregateBySeason(rows);
   if (!points.length) return emptyChart(el);
-  const w = 620, h = 285, left = 42, right = 18, top = 20, bottom = 58;
+  const w = narrowW(620), h = isNarrow() ? 230 : 285, left = 42, right = 18, top = 20, bottom = 58;
   const maxY = Math.max(1, ...points.map(p => p.starts));
   const group = (w - left - right) / points.length;
   const barW = Math.max(4, Math.min(14, group / 3));
@@ -395,7 +420,7 @@ function groupedBars(el, rows) {
 function targetBars(el, rows) {
   const points = aggregateBySeason(rows).filter(p => Number.isFinite(p.median_l) || Number.isFinite(p.median_p));
   if (!points.length) return emptyChart(el);
-  const w = 620, h = 285, left = 42, right = 18, top = 20, bottom = 58;
+  const w = narrowW(620), h = isNarrow() ? 230 : 285, left = 42, right = 18, top = 20, bottom = 58;
   const vals = points.flatMap(p => [p.median_l, p.median_p]).filter(Number.isFinite);
   const minY = Math.floor((Math.min(...vals) - .5) * 10) / 10;
   const maxY = Math.ceil((Math.max(...vals) + .5) * 10) / 10;
@@ -424,7 +449,7 @@ function horizontalBars(el, rows, getKey, getValue, color, limit = 10, minRows =
   }
   const items = [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit);
   if (!items.length) return emptyChart(el);
-  const w = 620, h = Math.max(285, 34 + minRows * 24), left = 138, right = 22, top = 16, rowH = 24;
+  const w = narrowW(620), h = Math.max(285, 34 + minRows * 24), left = 138, right = 22, top = 16, rowH = 24;
   const maxV = Math.max(...items.map(i => i[1]));
   const bars = items.map(([name, value], i) => {
     const y = top + i * rowH;
@@ -456,7 +481,7 @@ function renderPlaces(rows) {
     return order(a[0]) - order(b[0]);
   });
   if (!items.length) return emptyChart(el);
-  const w = 620, h = Math.max(285, 34 + items.length * 24), left = 138, right = 22, top = 16, rowH = 24;
+  const w = narrowW(620), h = Math.max(285, 34 + items.length * 24), left = 138, right = 22, top = 16, rowH = 24;
   const maxV = Math.max(...items.map(i => i[1]));
   const bars = items.map(([name, value], i) => {
     const y = top + i * rowH;
@@ -548,3 +573,11 @@ function render() {
 initTheme();
 initFilters();
 render();
+
+let wasNarrow = window.innerWidth < 720;
+window.addEventListener("resize", () => {
+  if ((window.innerWidth < 720) !== wasNarrow) {
+    wasNarrow = window.innerWidth < 720;
+    render();
+  }
+});
